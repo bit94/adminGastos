@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import LoginForm from "./components/LoginForm.js";
 import RegisterForm from "./components/RegisterForm.js";
 import CustomThemeProvider from "./theme.js";
+import { useNavigate } from "react-router-dom";
 
 function App(): React.JSX.Element {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -15,7 +17,7 @@ function App(): React.JSX.Element {
   }, []);
 
   if (isLoggedIn) {
-    return <div>Bienvenido al panel principal 🚀</div>;
+    navigate("/");
   }
 
   return (
