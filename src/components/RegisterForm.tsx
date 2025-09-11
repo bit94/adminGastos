@@ -13,6 +13,7 @@ export default function RegisterForm({ onRegisterSuccess }: { onRegisterSuccess:
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
+      console.log("Formulario enviado", form);
       const res = await fetch("https://admingastosapi-production.up.railway.app/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -41,10 +42,12 @@ export default function RegisterForm({ onRegisterSuccess }: { onRegisterSuccess:
     >
       <Paper elevation={3} sx={{ p: 4, maxWidth: 400, width: "100%" }}>
         <Typography variant="h5" gutterBottom>Registro</Typography>
-        <TextField label="Nombre" name="nombre" fullWidth margin="normal" value={form.nombre} onChange={handleChange} required />
-        <TextField label="Correo" name="email" type="email" fullWidth margin="normal" value={form.email} onChange={handleChange} required />
-        <TextField label="Contraseña" name="password" type="password" fullWidth margin="normal" value={form.password} onChange={handleChange} required />
-        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>Registrarse</Button>
+        <form onSubmit={handleSubmit}>
+          <TextField label="Nombre" name="nombre" fullWidth margin="normal" value={form.nombre} onChange={handleChange} required />
+          <TextField label="Correo" name="email" type="email" fullWidth margin="normal" value={form.email} onChange={handleChange} required />
+          <TextField label="Contraseña" name="password" type="password" fullWidth margin="normal" value={form.password} onChange={handleChange} required />
+          <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>Registrarse</Button>
+        </form>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>{message}</Typography>
       </Paper>
     </Box>
