@@ -47,9 +47,11 @@ export default function LoginForm({
     >
       <Paper elevation={3} sx={{ p: 4, maxWidth: 400, width: "100%" }}>
         <Typography variant="h5" gutterBottom>Login</Typography>
-        <TextField label="Correo" name="email" type="email" fullWidth margin="normal" value={form.email} onChange={handleChange} required />
-        <TextField label="Contraseña" name="password" type="password" fullWidth margin="normal" value={form.password} onChange={handleChange} required />
-        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>Iniciar sesión</Button>
+        <form onSubmit={handleSubmit}>
+          <TextField label="Correo" name="email" type="email" fullWidth margin="normal" value={form.email} onChange={handleChange} required />
+          <TextField label="Contraseña" name="password" type="password" fullWidth margin="normal" value={form.password} onChange={handleChange} required />
+          <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>Iniciar sesión</Button>
+        </form>
         {error && <Typography color="error" sx={{ mt: 2 }}>Credenciales inválidas</Typography>}
         <Typography
           variant="body2"
