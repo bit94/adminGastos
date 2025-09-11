@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import LoginForm from "./components/LoginForm";
-import RegisterForm from "./components/RegisterForm";
-import CustomThemeProvider from "./theme";
+import LoginForm from "./components/LoginForm.js";
+import RegisterForm from "./components/RegisterForm.js";
+import CustomThemeProvider from "./theme.js";
 
-function App(): JSX.Element {
+function App(): React.JSX.Element {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
