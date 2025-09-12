@@ -14,32 +14,30 @@ export default function AppRouter() {
   const isAuthenticated = !!localStorage.getItem("token");
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}
-        />
-        <Route path="/gastos" element={<Gastos />} />
-        <Route path="/reportes" element={<Reportes />} />
-        <Route path="/usuarios" element={<Usuarios />} />
-        <Route path="/configuracion" element={<Configuracion />} />
-        <Route
-          path="/login"
-          element={
-            showRegister ? (
-              <RegisterForm onRegisterSuccess={() => setShowRegister(false)} />
-            ) : (
-              <LoginForm
-                onLoginSuccess={() => {
-                  window.location.href = "/"; // fuerza recarga para que se reevalúe isAuthenticated
-                }}
-                onShowRegister={() => setShowRegister(true)}
-              />
-            )
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route
+        path="/"
+        element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}
+      />
+      <Route path="/gastos" element={<Gastos />} />
+      <Route path="/reportes" element={<Reportes />} />
+      <Route path="/usuarios" element={<Usuarios />} />
+      <Route path="/configuracion" element={<Configuracion />} />
+      <Route
+        path="/login"
+        element={
+          showRegister ? (
+            <RegisterForm onRegisterSuccess={() => setShowRegister(false)} />
+          ) : (
+            <LoginForm
+              onLoginSuccess={() => {
+                window.location.href = "/"; // fuerza recarga para que se reevalúe isAuthenticated
+              }}
+              onShowRegister={() => setShowRegister(true)}
+            />
+          )
+        }
+      />
+    </Routes>
   );
 }
