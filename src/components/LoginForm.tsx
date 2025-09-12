@@ -24,10 +24,13 @@ export default function LoginForm({
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams(form)
       });
-      const token = await res.text();
-      if (!token || token.length < 10) throw new Error("Token inválido");
-      localStorage.setItem("token", token);
-      onLoginSuccess();
+      if (res.status === 200) {
+        const token = await res.text();
+        localStorage.setItem("token", token);
+        onLoginSuccess();
+      } else {
+        setError(true);
+      }
     } catch {
       setError(true);
     }
