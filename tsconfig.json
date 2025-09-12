@@ -4,10 +4,19 @@
     "moduleResolution": "node16",
     "jsx": "react-jsx",
     "target": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "types": ["react", "react-dom", "node"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "types": [
+      "react",
+      "react-dom",
+      "node"
+    ],
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "resolveJsonModule": true
   }
 }

@@ -39,7 +39,7 @@ export default function LoginForm({
   return (
     <Box
       sx={{
-        height: "100vh",
+        height: "75vh",
         width: "100vw",
         display: "flex",
         justifyContent: "center",

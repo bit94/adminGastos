@@ -3,6 +3,8 @@ import LoginForm from "./components/LoginForm.js";
 import RegisterForm from "./components/RegisterForm.js";
 import CustomThemeProvider from "./theme.js";
 import { useNavigate } from "react-router-dom";
+import { version } from "./Version.js";
+import { Box, Typography } from "@mui/material";
 
 function App(): React.JSX.Element {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -10,15 +12,12 @@ function App(): React.JSX.Element {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token && token.length > 10) {
-      setIsLoggedIn(true);
+    if (isLoggedIn) {
+      navigate("/");
     }
-  }, []);
+  }, [isLoggedIn]);
 
-  if (isLoggedIn) {
-    navigate("/");
-  }
+  if (isLoggedIn) return <></>;
 
   return (
     <CustomThemeProvider>
@@ -30,6 +29,12 @@ function App(): React.JSX.Element {
           onShowRegister={() => setShowRegister(true)}
         />
       )}
+
+      <Box sx={{ mt: 0, textAlign: "center" }}>
+        <Typography variant="caption" align="center" sx={{ mt: 4, color: "text.secondary" }}>
+          Versión {version}
+        </Typography>
+      </Box>
     </CustomThemeProvider>
   );
 }
