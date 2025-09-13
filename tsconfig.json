@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "module": "Node16",
-    "moduleResolution": "node16",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": false,
     "jsx": "react-jsx",
     "target": "ESNext",
     "lib": [
@@ -10,6 +11,7 @@
       "ESNext"
     ],
     "types": [
+      "vite",
       "react",
       "react-dom",
       "node"
@@ -17,6 +19,15 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "strict": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@components/*": [
+        "components/*"
+      ],
+      "@types/*": [
+        "types/*"
+      ]
+    }
   }
 }

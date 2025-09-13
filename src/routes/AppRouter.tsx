@@ -1,13 +1,13 @@
 // src/AppRouter.tsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
-import Dashboard from "../pages/Dashboard.js";
-import Gastos from "../pages/Gastos.js";
+import Gastos from "../pages/Gastos";
 import Reportes from "../pages/Reportes.js";
 import Usuarios from "../pages/Usuarios.js";
 import Configuracion from "../pages/Configuracion.js";
 import LoginForm from "../components/LoginForm.js";
 import RegisterForm from "../components/RegisterForm.js";
+import DashboardLayout from "../components/DashboardLayout.js";
 
 export default function AppRouter() {
   const [showRegister, setShowRegister] = useState(false);
@@ -17,7 +17,7 @@ export default function AppRouter() {
     <Routes>
       <Route
         path="/"
-        element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}
+        element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />}
       />
       <Route path="/gastos" element={<Gastos />} />
       <Route path="/reportes" element={<Reportes />} />

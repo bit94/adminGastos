@@ -1,6 +1,6 @@
 import { Card, CardContent, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { DashboardCardProps } from "../types/DashboardCardProps.js";
+import { DashboardCardProps } from "../types/DashboardCardProps";
 
 export default function DashboardCard({ title, emoji, path }: DashboardCardProps) {
     const navigate = useNavigate();
