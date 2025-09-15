@@ -1,6 +1,7 @@
 import { Box, Drawer, List, ListItem, ListItemText, Typography, ListItemButton } from "@mui/material";
 import DashboardCard from "./DashboardCard";
 import Grid from "@mui/material/GridLegacy";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -12,6 +13,8 @@ const menuItems = [
 ];
 
 export default function DashboardLayout() {
+    const navigate = useNavigate();
+
     return (
         <Box sx={{ display: "flex" }}>
             {/* Sidebar */}
@@ -32,30 +35,19 @@ export default function DashboardLayout() {
                     <Typography variant="h6">Menú</Typography>
                 </Box>
                 <List>
-                    <List>
-                        {menuItems.map((item, index) => (
-                            <ListItem key={index} disablePadding>
-                                <ListItemButton onClick={() => (window.location.href = item.path)}>
-                                    <ListItemText primary={`${item.emoji} ${item.title}`} />
-                                </ListItemButton>
-                            </ListItem>
-                        ))}
-                    </List>
+                    {menuItems.map((item, index) => (
+                        <ListItem key={index} disablePadding>
+                            <ListItemButton onClick={() => navigate(item.path)}>
+                                <ListItemText primary={`${item.emoji} ${item.title}`} />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
                 </List>
             </Drawer>
 
             {/* Main content */}
             <Box component="main" sx={{ flexGrow: 1, p: 4 }}>
-                <Typography variant="h4" gutterBottom>
-                    Bienvenido al panel principal 🚀
-                </Typography>
-                <Grid container spacing={3}>
-                    {menuItems.map((item, index) => (
-                        <Grid item xs={12} md={6} key={index} component="div">
-                            <DashboardCard {...item} />
-                        </Grid>
-                    ))}
-                </Grid>
+                <Outlet />
             </Box>
         </Box>
     );
