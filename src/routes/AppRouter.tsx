@@ -16,15 +16,20 @@ export default function AppRouter() {
 
   return (
     <Routes>
+      {/* Ruta protegida con layout persistente */}
       <Route
         path="/"
         element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />}
-      />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/gastos" element={<Gastos />} />
-      <Route path="/reportes" element={<Reportes />} />
-      <Route path="/usuarios" element={<Usuarios />} />
-      <Route path="/configuracion" element={<Configuracion />} />
+      >
+        {/* Rutas hijas que se renderizan dentro del layout */}
+        <Route index element={<Dashboard />} />
+        <Route path="gastos" element={<Gastos />} />
+        <Route path="reportes" element={<Reportes />} />
+        <Route path="usuarios" element={<Usuarios />} />
+        <Route path="configuracion" element={<Configuracion />} />
+      </Route>
+
+      {/* Rutas públicas */}
       <Route
         path="/login"
         element={
@@ -33,7 +38,7 @@ export default function AppRouter() {
           ) : (
             <LoginForm
               onLoginSuccess={() => {
-                window.location.href = "/"; // fuerza recarga para que se reevalúe isAuthenticated
+                window.location.href = "/"; // puedes refactorizar esto también
               }}
               onShowRegister={() => setShowRegister(true)}
             />

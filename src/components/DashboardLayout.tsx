@@ -1,6 +1,4 @@
 import { Box, Drawer, List, ListItem, ListItemText, Typography, ListItemButton } from "@mui/material";
-import DashboardCard from "./DashboardCard";
-import Grid from "@mui/material/GridLegacy";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
