@@ -27,6 +27,27 @@
       ],
       "@types/*": [
         "types/*"
+      ],
+      "@pages/*": [
+        "pages/*"
+      ],
+      "@hooks/*": [
+        "hooks/*"
+      ],
+      "@utils/*": [
+        "utils/*"
+      ],
+      "@services/*": [
+        "services/*"
+      ],
+      "@context/*": [
+        "context/*"
+      ],
+      "@routes/*": [
+        "routes/*"
+      ],
+      "@assets/*": [
+        "assets/*"
       ]
     }
   }

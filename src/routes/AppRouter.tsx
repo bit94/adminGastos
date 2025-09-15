@@ -8,7 +8,7 @@ import Configuracion from "../pages/Configuracion";
 import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
 import DashboardLayout from "../components/DashboardLayout";
-import Dashboard from "pages/Dashboard";
+import Dashboard from "@pages/Dashboard";
 
 export default function AppRouter() {
   const [showRegister, setShowRegister] = useState(false);
