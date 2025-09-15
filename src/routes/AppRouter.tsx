@@ -20,7 +20,7 @@ export default function AppRouter() {
         path="/"
         element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />}
       />
-      <Route index element={<Dashboard />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/gastos" element={<Gastos />} />
       <Route path="/reportes" element={<Reportes />} />
       <Route path="/usuarios" element={<Usuarios />} />
