@@ -18,13 +18,22 @@ import {
 } from '@mui/material';
 import { API_ADMIN_BASE_URL } from '../Api';
 import { TipoPeriodoDTO } from '../types/TipoPeriodoDTO';
+import ConfirmDialog from './ConfirmDialog';
+import { secureFetch } from '@utils/secureFetch';
 
 const TipoPeriodo: React.FC = () => {
   const [descripcion, setDescripcion] = useState<string>('');
-  const [dias, setDias] = useState<string>('');
+  const [dias, setDias] = useState<number>(1);
   const [tipoPeriodos, setTipoPeriodos] = useState<TipoPeriodoDTO[]>([]);
   const [editId, setEditId] = useState<number | null>(null);
   const [error, setError] = useState<string>('');
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+
+  const requestDelete = (id: number) => {
+    setDeleteId(id);
+    setConfirmOpen(true);
+  };
 
   const token = localStorage.getItem('token');
 
@@ -34,7 +43,7 @@ const TipoPeriodo: React.FC = () => {
   };
 
   useEffect(() => {
-    fetch(`${API_ADMIN_BASE_URL}/tipo-periodo`, { headers })
+    secureFetch(`${API_ADMIN_BASE_URL}/tipo-periodo`, { headers })
       .then(async res => {
         if (!res.ok) {
           const errorText = await res.text();
@@ -43,7 +52,6 @@ const TipoPeriodo: React.FC = () => {
         return res.json();
       })
       .then((data: TipoPeriodoDTO[]) => {
-        console.log('Respuesta:', data);
         setTipoPeriodos(data);
       })
       .catch((err) => setError(err.message));
@@ -51,10 +59,15 @@ const TipoPeriodo: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const payload = {
-      descripcion,
-      dias: parseInt(dias)
-    };
+
+    if (!descripcion.trim() || dias < 1 || dias > 365) {
+      setError("Verifica que la descripción no esté vacía y los días estén entre 1 y 365.");
+      return;
+    }
+
+    const payload = editId
+      ? { id: editId, descripcion, dias } // ✅ incluye el ID al actualizar
+      : { descripcion, dias };
 
     const url = editId
       ? `${API_ADMIN_BASE_URL}/tipo-periodo/${editId}`
@@ -63,8 +76,7 @@ const TipoPeriodo: React.FC = () => {
     const method = editId ? 'PUT' : 'POST';
 
     try {
-      console.log('Token JWT:', token);
-      const res = await fetch(url, {
+      const res = await secureFetch(url, {
         method,
         headers,
         body: JSON.stringify(payload)
@@ -72,6 +84,7 @@ const TipoPeriodo: React.FC = () => {
 
       if (!res.ok) {
         const errorText = await res.text();
+        console.error('Error del backend:', errorText);
         throw new Error(errorText);
       }
 
@@ -87,36 +100,41 @@ const TipoPeriodo: React.FC = () => {
 
       resetForm();
     } catch (err: any) {
+      console.error('Error en submit:', err);
       setError(err.message);
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (!window.confirm('¿Seguro que deseas eliminar este registro?')) return;
+  const confirmDelete = async () => {
+    if (deleteId === null) return;
 
     try {
-      const res = await fetch(`${API_ADMIN_BASE_URL}/tipo-periodo/${id}`, {
+      console.log('Eliminando ID:', deleteId);
+      const res = await secureFetch(`${API_ADMIN_BASE_URL}/tipo-periodo/${deleteId}`, {
         method: 'DELETE',
         headers
       });
 
       if (!res.ok) throw new Error('Error al eliminar');
 
-      setTipoPeriodos(prev => prev.filter(tp => tp.id !== id));
+      setTipoPeriodos(prev => prev.filter(tp => tp.id !== deleteId));
     } catch (err: any) {
       setError(err.message);
+    } finally {
+      setConfirmOpen(false);
+      setDeleteId(null);
     }
   };
 
   const handleEdit = (tp: TipoPeriodoDTO) => {
     setDescripcion(tp.descripcion);
-    setDias(tp.dias.toString());
+    setDias(tp.dias);
     setEditId(tp.id);
   };
 
   const resetForm = () => {
     setDescripcion('');
-    setDias('');
+    setDias(1);
     setEditId(null);
     setError('');
   };
@@ -142,7 +160,7 @@ const TipoPeriodo: React.FC = () => {
               label="Días"
               type="number"
               value={dias}
-              onChange={(e) => setDias(e.target.value)}
+              onChange={(e) => setDias(Number(e.target.value))}
               fullWidth
               required
             />
@@ -162,14 +180,13 @@ const TipoPeriodo: React.FC = () => {
         {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
       </Paper>
 
-      {/* 📋 Listado */}
-      <Typography variant="h6" sx={{ mt: 4 }}>
-        Listado
-      </Typography>
-
       <Divider sx={{ mb: 2 }} />
 
-      <Paper>
+      <Paper elevation={3} sx={{ p: 3, minHeight: 300, minWidth: 400 }}>
+        {/* 📋 Listado */}
+        <Typography variant="h6">
+          Listado
+        </Typography>
         <Table>
           <TableHead>
             <TableRow>
@@ -180,7 +197,12 @@ const TipoPeriodo: React.FC = () => {
           </TableHead>
           <TableBody>
             {tipoPeriodos.map(tp => (
-              <TableRow key={tp.id}>
+              <TableRow hover sx={{
+                '&:hover': {
+                  backgroundColor: 'action.hover',
+                  cursor: 'pointer'
+                }
+              }} key={tp.id}>
                 <TableCell>{tp.descripcion}</TableCell>
                 <TableCell>{tp.dias}</TableCell>
                 <TableCell>
@@ -188,7 +210,7 @@ const TipoPeriodo: React.FC = () => {
                     <Button size="small" variant="outlined" onClick={() => handleEdit(tp)}>
                       Editar
                     </Button>
-                    <Button size="small" variant="outlined" color="error" onClick={() => handleDelete(tp.id)}>
+                    <Button size="small" variant="outlined" color="error" onClick={() => requestDelete(tp.id)}>
                       Eliminar
                     </Button>
                   </Stack>
@@ -198,6 +220,17 @@ const TipoPeriodo: React.FC = () => {
           </TableBody>
         </Table>
       </Paper>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="¿Seguro que deseas eliminar este registro?"
+        message="Esta acción no se puede deshacer."
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        variant="danger"
+        onConfirm={confirmDelete}
+        onClose={() => setConfirmOpen(false)}
+      />
     </Box>
   );
 };

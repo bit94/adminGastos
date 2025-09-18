@@ -10,6 +10,7 @@ import {
     useMediaQuery,
     useTheme,
     Tooltip,
+    Container,
 } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -152,22 +153,24 @@ export default function DashboardLayout() {
                 component="main"
                 sx={{
                     flexGrow: 1,
-                    p: 4,
-                    width: "100%",
-                    maxWidth: "100%",
                     display: "flex",
-                    flexDirection: "column",
-                    alignItems: "stretch",
+                    justifyContent: "center",
+                    alignItems: "flex-start",
+                    p: 4,
                     ml: menuVisible && !isMobile ? `${drawerWidth}px` : 0,
-                    transition: "margin-left 0.3s ease",
+                    transition: "margin-left 0.3s ease"
                 }}
             >
-                <Outlet />
-                <Box sx={{ mt: 4, textAlign: "center" }}>
-                    <Typography variant="body2" color="text.secondary">
-                        Versión {version}
-                    </Typography>
-                </Box>
+                <Container maxWidth="md">
+                    <Box display={"flex"} flexDirection="column" gap={4}>
+                        <Outlet />
+                        <Box sx={{ textAlign: "center" }}>
+                            <Typography variant="body2" color="text.secondary">
+                                Versión {version}
+                            </Typography>
+                        </Box>
+                    </Box>
+                </Container>
             </Box>
 
             {/* Diálogo de confirmación para cerrar sesión */}

@@ -26,31 +26,45 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) return;
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
-        try {
-            const decoded = jwtDecode<DecodedToken>(token);            
-            const user: User = {
-                email: decoded.sub,
-                role: decoded.roles.includes("ADMIN") ? "ADMIN" : "USER",
-                nombre: decoded.nombre
-            };
-            setUser(user);
-        } catch (err) {
-            console.error("Token inválido", err);
-            localStorage.removeItem("token");
-        }
-    }, []);
+    try {
+      const decoded = jwtDecode<DecodedToken>(token);
+      const nowInSeconds = Math.floor(Date.now() / 1000);
 
-    return (
-        <AuthContext.Provider value={{ user, setUser }}>
-            {children}
-        </AuthContext.Provider>
-    );
+      if (decoded.exp < nowInSeconds) {
+        console.warn("Token expirado");
+        localStorage.removeItem("token");
+        setUser(null);
+        window.location.href = "/login";
+        return;
+      }
+
+      const user: User = {
+        email: decoded.sub,
+        role: decoded.roles.includes("ADMIN") ? "ADMIN" : "USER",
+        nombre: decoded.nombre
+      };
+      setUser(user);
+    } catch (err) {
+      console.error("Token inválido", err);
+      localStorage.removeItem("token");
+      setUser(null);
+      window.location.href = "/login";
+    }
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ user, setUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => useContext(AuthContext);
+
+export default AuthContext;
