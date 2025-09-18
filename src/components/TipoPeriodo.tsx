@@ -35,9 +35,18 @@ const TipoPeriodo: React.FC = () => {
 
   useEffect(() => {
     fetch(`${API_ADMIN_BASE_URL}/tipo-periodo`, { headers })
-      .then(res => res.json())
-      .then((data: TipoPeriodoDTO[]) => setTipoPeriodos(data))
-      .catch(() => setError('Error al cargar los datos'));
+      .then(async res => {
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(errorText);
+        }
+        return res.json();
+      })
+      .then((data: TipoPeriodoDTO[]) => {
+        console.log('Respuesta:', data);
+        setTipoPeriodos(data);
+      })
+      .catch((err) => setError(err.message));
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -54,13 +63,17 @@ const TipoPeriodo: React.FC = () => {
     const method = editId ? 'PUT' : 'POST';
 
     try {
+      console.log('Token JWT:', token);
       const res = await fetch(url, {
         method,
         headers,
         body: JSON.stringify(payload)
       });
 
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText);
+      }
 
       const updated: TipoPeriodoDTO = await res.json();
 

@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             const decoded = jwtDecode<DecodedToken>(token);            
             const user: User = {
                 email: decoded.sub,
-                role: decoded.roles.includes("ROLE_ADMIN") ? "ADMIN" : "USER",
+                role: decoded.roles.includes("ADMIN") ? "ADMIN" : "USER",
                 nombre: decoded.nombre
             };
             setUser(user);
