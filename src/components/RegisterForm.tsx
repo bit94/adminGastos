@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { TextField, Button, Typography, Box, Paper } from "@mui/material";
+import { API_ADMIN_BASE_URL } from "../Api";
 
 export default function RegisterForm({ onRegisterSuccess }: { onRegisterSuccess: () => void }) {
   const [form, setForm] = useState({ nombre: "", email: "", password: "" });
@@ -13,8 +14,7 @@ export default function RegisterForm({ onRegisterSuccess }: { onRegisterSuccess:
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      console.log("Formulario enviado", form);
-      const res = await fetch("https://admingastosapi-production.up.railway.app/api/auth/register", {
+      const res = await fetch(`${API_ADMIN_BASE_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams(form)

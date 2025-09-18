@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { TextField, Button, Typography, Box, Paper } from "@mui/material";
+import { API_ADMIN_BASE_URL } from "../Api";
 
 export default function LoginForm({
   onLoginSuccess,
@@ -19,7 +20,7 @@ export default function LoginForm({
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch("https://admingastosapi-production.up.railway.app/api/auth/login", {
+      const res = await fetch(`${API_ADMIN_BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams(form)

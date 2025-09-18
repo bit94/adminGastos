@@ -1,5 +1,5 @@
 // src/AppRouter.tsx
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Gastos from "../pages/Gastos";
 import Reportes from "../pages/Reportes";
@@ -9,17 +9,19 @@ import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
 import DashboardLayout from "../components/DashboardLayout";
 import Dashboard from "@pages/Dashboard";
+import CatalogosLayout from "@components/CatalogosLayout";
+import TipoPeriodo from "@components/TipoPeriodo";
 
 export default function AppRouter() {
+  const navigate = useNavigate();
   const [showRegister, setShowRegister] = useState(false);
-  const isAuthenticated = !!localStorage.getItem("token");
 
   return (
     <Routes>
       {/* Ruta protegida con layout persistente */}
       <Route
         path="/"
-        element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />}
+        element={localStorage.getItem("token") ? <DashboardLayout /> : <Navigate to="/login" replace />}
       >
         {/* Rutas hijas que se renderizan dentro del layout */}
         <Route index element={<Dashboard />} />
@@ -27,6 +29,9 @@ export default function AppRouter() {
         <Route path="reportes" element={<Reportes />} />
         <Route path="usuarios" element={<Usuarios />} />
         <Route path="configuracion" element={<Configuracion />} />
+        <Route path="catalogos" element={<CatalogosLayout />}>
+          <Route path="tipo-periodo" element={<TipoPeriodo />} />
+        </Route>
       </Route>
 
       {/* Rutas públicas */}
@@ -37,9 +42,7 @@ export default function AppRouter() {
             <RegisterForm onRegisterSuccess={() => setShowRegister(false)} />
           ) : (
             <LoginForm
-              onLoginSuccess={() => {
-                window.location.href = "/"; // puedes refactorizar esto también
-              }}
+              onLoginSuccess={() => navigate("/", { replace: true })}
               onShowRegister={() => setShowRegister(true)}
             />
           )

@@ -1,0 +1,1 @@
+export const API_ADMIN_BASE_URL = 'https://admingastosapi-production.up.railway.app/api';
